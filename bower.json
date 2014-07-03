@@ -1,6 +1,6 @@
 {
     "name": "bicubic.angular-phonegap",
-    "version": "0.0.2",
+    "version": "0.2",
     "main": [
         "src/directives/adjustable-text-area/adjustable-text-area.js",
         "src/directives/bc-error-message/bc-error-mesage.js",
