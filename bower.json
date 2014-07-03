@@ -1,0 +1,25 @@
+{
+    "name": "bicubic.angular-phonegap",
+    "version": "0.1",
+    "homepage": "https://github.com/christophenovalet/bicubic.angular-phonegap",
+    "authors": [
+        "christophe novalet <christophe@whatido.be>"
+    ],
+    "description": "Angular / Phonegap extensions",
+    "keywords": [
+        "angular",
+        "phonegap",
+        "directives"
+    ],
+
+    "license": "Apache",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ]
+}
+
