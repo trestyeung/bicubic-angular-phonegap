@@ -1,6 +1,15 @@
 {
     "name": "bicubic.angular-phonegap",
     "version": "0.1",
+    "main": [
+        "src/directives/adjustable-text-area/adjustable-text-area.js",
+        "src/directives/bc-error-message/bc-error-mesage.js",
+        "src/directives/bc-mobile-camera/bc-mobile-camera.js",
+        "src/directives/loaded-content/loaded-content.js",
+        "src/directives/mobile-date-picker/mobile-date-picker.js",
+        "src/directives/mobile-popup/mobile-popup.js",
+        "src/directives/repeater-rendered/RepeaterRendered.js"
+    ],
     "homepage": "https://github.com/christophenovalet/bicubic.angular-phonegap",
     "authors": [
         "christophe novalet <christophe@whatido.be>"
