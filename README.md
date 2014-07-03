@@ -1,4 +1,2 @@
-underscore.snapQ
-================
+Angular Phonegap directives
 
-Underscore Query mixins
