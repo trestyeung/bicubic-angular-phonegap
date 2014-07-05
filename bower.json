@@ -12,6 +12,7 @@
         "./src/directives/repeater-rendered/RepeaterRendered.js",
         "./src/directives/context-menu/ng-mobilecontext.js",
         "./src/directives/context-menu/ng-mobilecontext.css",
+        "./src/directives/mobile-popup/mobile-animations.css",
         "./src/services/http-service.js",
         "./src/services/locale-service.js",
         "./src/services/network-service.js",
