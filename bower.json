@@ -1,6 +1,6 @@
 {
     "name": "bicubic.angular-phonegap",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "main": [
         "./src/js/bicubic.animate.js",
         "./src/directives/adjustable-text-area/adjustable-text-area.js",
@@ -10,8 +10,8 @@
         "./src/directives/mobile-date-picker/mobile-date-picker.js",
         "./src/directives/mobile-popup/mobile-popup.js",
         "./src/directives/repeater-rendered/RepeaterRendered.js",
-        "./src/bower_components/bicubic-angular-phonegap/src/directives/context-menu/ng-mobilecontext.js",
-        "./src/bower_components/bicubic-angular-phonegap/src/directives/context-menu/ng-mobilecontext.css",
+        "./src/directives/context-menu/ng-mobilecontext.js",
+        "./src/directives/context-menu/ng-mobilecontext.css",
         "./src/services/http-service.js",
         "./src/services/locale-service.js",
         "./src/services/network-service.js",
