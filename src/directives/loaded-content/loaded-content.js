@@ -1,17 +1,19 @@
 angular.module('bicubic.loadedContent', [])
-    .directive('loadedContent', ['$timeout', function ($timeout) {
+    .directive('loadedContent', ['$timeout', function () {
         return {
             restrict: 'EA',
             replace: false,
-            scope: false,
-            link: function ($scope, $element, $attrs) {
+            scope: {
+                loadedContent : '='
+            },
+            link: function ($scope, $element) {
 
                 var $spinnerContainer = $('<div id="loading-bar-spinner" class="loading-bar-spinner" ></div>');
                 var $spinner = $('<div class="spinner-main" style="display: block;"></div>');
 
                 $spinnerContainer.append($spinner);
 
-                var hideLoader = $scope.$watch('hideLoader', function (n, o) {
+                var hideLoader = $scope.$watch('loadedContent', function (n) {
                     if (n !== undefined) {
                         if (n === true) {
                             if ($element.hasClass('hidden-opacity-quick')) {

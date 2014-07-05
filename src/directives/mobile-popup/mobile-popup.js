@@ -3,6 +3,9 @@
     angular.module('bicubic.mobilePopup', [])
         .factory('createPopup', function ($document, $compile, $rootScope, $controller, $timeout, $templateCache) {
 
+            if (!window.deviceHeight)
+                window.deviceHeight = window.innerHeight;
+
             var defaults = {
                 id: null,
                 template: null,
@@ -99,7 +102,7 @@
 
                 var modalBlocker = $("<div style='position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: #ff0000; opacity: 0; z-index: 10000000'></div>");
 
-                var modalBlockerTouchCallback = function (event) {
+                var modalBlockerTouchCallback = function () {
                     return false;
                 };
 
@@ -164,7 +167,7 @@
         .directive('bcMobilePopup', function (createPopup) {
             return {
                 restrict: 'A',
-                link: function ($scope, $el, $attrs) {
+                link: function () {
 
                     var templateUrl = '';
                     var controller = '';
