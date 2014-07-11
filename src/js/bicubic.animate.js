@@ -1,5 +1,6 @@
+//v1.0.0
 function Wdo() { }
-Wdo.animateTranslate = function ($elem, offset, fade, useGpu) {
+Wdo.animateTranslate = function ($elem, offset, fade, useGpu, hideTransitionEndCallBack) {
 
     if (!offset && offset != 0)
         offset = '100%';
@@ -17,13 +18,15 @@ Wdo.animateTranslate = function ($elem, offset, fade, useGpu) {
             $elem.css('opacity', '1', ' !important');
     }
     else {
-
         var transitionSucccess = false;
 
         $elem.bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function () {
             $elem.addClass('before-animation'); //hides the elem
             $elem.unbind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd");
             transitionSucccess = true;
+
+            if (hideTransitionEndCallBack && !(hideTransitionEndCallBack instanceof jQuery.Event))
+                hideTransitionEndCallBack.call();
         });
 
         if (useGpu)

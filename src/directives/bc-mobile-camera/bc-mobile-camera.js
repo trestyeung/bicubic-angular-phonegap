@@ -1,5 +1,6 @@
+//v1.0.0
 angular.module('bicubic.mobileCamera', [])
-    .directive('bcMobileCamera', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
+    .directive('bcMobileCamera', ['$timeout', '$rootScope', '$compile', function ($timeout, $rootScope, $compile) {
         return {
             restrict: 'EA',
             replace: true,
@@ -9,45 +10,44 @@ angular.module('bicubic.mobileCamera', [])
             },
             link: function ($scope, $element) {
 
-                var cameraMenuOverlayEl, cameraMenuElement;
+                //menu template here, attach to doc
+                var menuid = _.uid() || 'menu'; //UID here
 
-                var toggleMenu = function () {
-                    if (!cameraMenuElement) return;
-                    cameraMenuElement.css('z-index', 100001);
-                    cameraMenuOverlayEl.css('z-index', 100001);
-                    Wdo.animateTranslate(cameraMenuElement, '-100px', true, true);
+                //create menu
+                var template =
+                    '<div>' +
+                    '<div class="before-animation pushToGpu sc-transition blackout" id="' + menuid + '-blackout"></div>' +
+                    '<div class="mobileMenu before-animation pushToGpu sc-transition" id="' + menuid + '-menu">' +
+                    '<ul>' +
+                    '<li class="clickable-background-black"  id="' + menuid + '-camera-button">' +
+                    '<a>Prendre une photo</a>' +
+                    '</li>' +
+                    '<li class="clickable-background-black" id="' + menuid + '-library-button">' +
+                    '<a>Bibliothèque</a>' +
+                    '</li>' +
+                    '</ul>' +
+                    '<ul>' +
+                    '<li class="clickable-background-black" id="' + menuid + '-close" >' +
+                    '<a>Annuler</a>' +
+                    '</li>' +
+                    '</ul>' +
+                    '</div>' +
+                    '</div>';
+
+                var e = $compile(template)($scope);
+                $('body').append(e);
+
+                var cameraMenuOverlayEl, cameraMenuElement, cameraButton, libraryButton;
+
+                var toggleMenu = function (callback) {
+                    if (_.size(cameraMenuElement) === 0) return;
+                    Wdo.animateTranslate(cameraMenuElement, '-100px', true, true, callback);
                     Wdo.animateFade(cameraMenuOverlayEl);
                 };
 
-
-                $timeout(function () {
-
-                    // UPLOAD PICTURE
-                    cameraMenuOverlayEl = $('#cameraMenu-blackout');
-                    cameraMenuElement = $('#cameraMenu-menu');
-
-                    //Bind the menu
-                    $rootScope.cameraMenu = [
-                        {
-                            active: true,
-                            callback: takePictureFromCamera,
-                            text: 'Prendre une photo'
-                        },
-                        {
-                            active: false,
-                            callback: takePictureFromLibrary,
-                            text: 'Bibliothèque'
-                        }
-                    ];
-
-                    //Adds the menu event handlers
-                    $element.bind('touchend', toggleMenu); //#popupMenu-close
-                    $('#cameraMenu-close').bind('touchend', toggleMenu);
-                    //functions
-                    function takePictureFromCamera() {
-                        $timeout(function () {
-                            toggleMenu();
-                        }, 1000, false);
+                //functions
+                function takePictureFromCamera() {
+                    toggleMenu(function () {
                         navigator.camera.getPicture(
                             pictureTaken,
                             function (message) {
@@ -65,12 +65,11 @@ angular.module('bicubic.mobileCamera', [])
                                 sourceType: navigator.camera.PictureSourceType.CAMERA,
                                 correctOrientation: true
                             });
-                    }
+                    });
+                }
 
-                    function takePictureFromLibrary() {
-                        $timeout(function () {
-                            toggleMenu();
-                        }, 1000, false);
+                function takePictureFromLibrary() {
+                    toggleMenu(function () {
                         navigator.camera.getPicture(
                             pictureTaken,
                             function (message) {
@@ -86,23 +85,42 @@ angular.module('bicubic.mobileCamera', [])
                                 sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
                                 correctOrientation: true
                             });
-                    }
+                    });
+                }
 
-                    function pictureTaken(imageURI) {
-                        $rootScope.$apply(function () {
-                            $scope.imageUri = imageURI;
-                        });
+                function pictureTaken(imageURI) {
+                    $rootScope.$apply(function () {
+                        $scope.imageUri = imageURI;
+                    });
 
-                    }
+                }
+
+                $timeout(function () {
+
+                    // UPLOAD PICTURE
+                    cameraMenuOverlayEl = $('#' + menuid + '-blackout');
+                    cameraMenuElement = $('#' + menuid + '-menu');
+                    cameraButton = $('#' + menuid + '-camera-button');
+                    libraryButton = $('#' + menuid + '-library-button');
+
+                    //Adds the menu event handlers
+                    $element.bind('touchend', toggleMenu); //#popupMenu-close
+                    $('#' + menuid + '-close').bind('touchend',toggleMenu);
+                    cameraButton.bind('touchend', takePictureFromCamera);
+                    libraryButton.bind('touchend', takePictureFromLibrary);
+
                 }, 600, false);
 
                 $scope.$on('$destroy', function () {
                     $element.unbind('touchend', toggleMenu); //#popupMenu-close
-                    $('#cameraMenu-close').bind('touchend', toggleMenu);
+                    $('#' + menuid + '-close').unbind('touchend', toggleMenu);
+                    cameraButton.unbind('touchend', takePictureFromCamera);
+                    libraryButton.unbind('touchend', takePictureFromLibrary);
                     cameraMenuElement = null;
                     cameraMenuOverlayEl = null;
+                    cameraButton = null;
+                    libraryButton = null;
                 });
-
 
             }
         };
