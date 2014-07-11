@@ -1,4 +1,4 @@
-//v1.0.0
+//v1.0.1
 angular.module('bicubic.mobileCamera', [])
     .directive('bcMobileCamera', ['$timeout', '$rootScope', '$compile', function ($timeout, $rootScope, $compile) {
         return {
@@ -6,29 +6,41 @@ angular.module('bicubic.mobileCamera', [])
             replace: true,
             scope: {
                 imageUri: '=',
-                imageDataUri: '='
+                imageDataUri: '=',
+                takeFromCameraText: '@',
+                takeFromLibraryText: '@',
+                cancelText: '@'
             },
             link: function ($scope, $element) {
 
+                if(!_.hasDeep(navigator,'camera.getPicture')){
+                    console.warn('Phonegap Camera Plugin Not installed')
+                }
+
                 //menu template here, attach to doc
-                var menuid = _.uid() || 'menu'; //UID here
+                var options = {
+                    menuId: _.uid() || 'menu',
+                    takeFromCameraText: $scope.takeFromCameraText || 'Take from camera',
+                    takeFromLibraryText: $scope.takeFromLibraryText || 'Take from library',
+                    cancelText: $scope.cancelText || 'Cancel'
+                };
 
                 //create menu
                 var template =
                     '<div>' +
-                    '<div class="before-animation pushToGpu sc-transition blackout" id="' + menuid + '-blackout"></div>' +
-                    '<div class="mobileMenu before-animation pushToGpu sc-transition" id="' + menuid + '-menu">' +
+                    '<div class="before-animation pushToGpu sc-transition blackout" id="' + options.menuId + '-blackout"></div>' +
+                    '<div class="mobileMenu before-animation pushToGpu sc-transition" id="' + options.menuId + '-menu">' +
                     '<ul>' +
-                    '<li class="clickable-background-black"  id="' + menuid + '-camera-button">' +
-                    '<a>Prendre une photo</a>' +
+                    '<li class="clickable-background-black"  id="' + options.menuId + '-camera-button">' +
+                    '<a>' + options.takeFromCameraText + '</a>' +
                     '</li>' +
-                    '<li class="clickable-background-black" id="' + menuid + '-library-button">' +
-                    '<a>Bibliothèque</a>' +
+                    '<li class="clickable-background-black" id="' + options.menuId + '-library-button">' +
+                    '<a>' + options.takeFromLibraryText + '</a>' +
                     '</li>' +
                     '</ul>' +
                     '<ul>' +
-                    '<li class="clickable-background-black" id="' + menuid + '-close" >' +
-                    '<a>Annuler</a>' +
+                    '<li class="clickable-background-black" id="' + options.menuId + '-close" >' +
+                    '<a>' + options.cancelText + '</a>' +
                     '</li>' +
                     '</ul>' +
                     '</div>' +
@@ -98,14 +110,14 @@ angular.module('bicubic.mobileCamera', [])
                 $timeout(function () {
 
                     // UPLOAD PICTURE
-                    cameraMenuOverlayEl = $('#' + menuid + '-blackout');
-                    cameraMenuElement = $('#' + menuid + '-menu');
-                    cameraButton = $('#' + menuid + '-camera-button');
-                    libraryButton = $('#' + menuid + '-library-button');
+                    cameraMenuOverlayEl = $('#' + options.menuId + '-blackout');
+                    cameraMenuElement = $('#' + options.menuId + '-menu');
+                    cameraButton = $('#' + options.menuId + '-camera-button');
+                    libraryButton = $('#' + options.menuId + '-library-button');
 
                     //Adds the menu event handlers
                     $element.bind('touchend', toggleMenu); //#popupMenu-close
-                    $('#' + menuid + '-close').bind('touchend',toggleMenu);
+                    $('#' + options.menuId + '-close').bind('touchend', toggleMenu);
                     cameraButton.bind('touchend', takePictureFromCamera);
                     libraryButton.bind('touchend', takePictureFromLibrary);
 
@@ -113,7 +125,7 @@ angular.module('bicubic.mobileCamera', [])
 
                 $scope.$on('$destroy', function () {
                     $element.unbind('touchend', toggleMenu); //#popupMenu-close
-                    $('#' + menuid + '-close').unbind('touchend', toggleMenu);
+                    $('#' + options.menuId + '-close').unbind('touchend', toggleMenu);
                     cameraButton.unbind('touchend', takePictureFromCamera);
                     libraryButton.unbind('touchend', takePictureFromLibrary);
                     cameraMenuElement = null;
