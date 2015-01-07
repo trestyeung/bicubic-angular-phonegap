@@ -1,6 +1,6 @@
 {
     "name": "bicubic.angular-phonegap",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "main": [
         "./src/js/bicubic.animate.js",
         "./src/directives/adjustable-text-area/adjustable-text-area.js",
