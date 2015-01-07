@@ -1,5 +1,4 @@
-﻿//V1.0.0
-//Attributes: menuid, imenus
+﻿﻿//Attributes: menuid, imenus
 (function (angular) {
     'use strict';
     angular.module('bicubic.mobileMenu', [])
@@ -47,7 +46,6 @@
                     };
 
                     var toggleMenu = function () {
-                        debugger;
                         Wdo.animateTranslate(menuElement, '-100px', true, true, trEndCallback);
                         Wdo.animateFade(menuOverlayElement);
                     };

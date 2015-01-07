@@ -1,4 +1,3 @@
-//v1.0.0
 function Wdo() { }
 Wdo.animateTranslate = function ($elem, offset, fade, useGpu, hideTransitionEndCallBack) {
 

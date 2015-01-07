@@ -1,4 +1,4 @@
-﻿(function () {
+﻿﻿(function () {
     'use strict';
     angular.module('bicubic.mobilePopup', [])
         .factory('createPopup', function ($document, $compile, $rootScope, $controller, $timeout, $templateCache) {
@@ -47,7 +47,7 @@
 
                 var template = $templateCache.get(options.templateUrl);
 
-                if (!template) console.error('Template not in cache!');
+                if (!template) console.error(options.templateUrl + ' template not in cache!');
 
                 var modalBody = '<!--' + options.templateUrl + '--><div class="modal-body">' + template[1] + '</div>';
 
@@ -58,7 +58,12 @@
 
                 modalEl.css("height", screenHeight);
 
-                var ctrl, locals, scope = options.scope || $rootScope.$new();
+                var ctrl, locals, scope;
+
+                if (options.scope)
+                    scope = options.scope.$new();
+                else
+                    scope = $rootScope.$new();
 
                 scope.title = options.title;
 

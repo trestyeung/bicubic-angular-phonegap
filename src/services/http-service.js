@@ -1,6 +1,7 @@
 angular.module('bicubic.httpService', [])
     .factory('offlineProofHttp', [
         '$http', '$q', function ($http, $q) {
+
             var isOnline = true;
             if (navigator.connection) {
                 isOnline = navigator.connection.type === 'ethernet' ||
@@ -23,9 +24,10 @@ angular.module('bicubic.httpService', [])
             document.addEventListener('offline', onOffline, false);
 
             var offlineProofHttp = function (requestConfig) {
-                var key,
-                    value;
-                if (isOnline) {
+
+                var key, value;
+
+                if (isOnline || requestConfig.fromStorage) {
                     return $http(requestConfig)
                         .then(function (data) {
                             if (/^GET$/i.test(requestConfig.method)) {
@@ -71,22 +73,27 @@ angular.module('bicubic.httpService', [])
                 config = angular.extend({ url: url, method: 'DELETE' }, config);
                 return offlineProofHttp(config);
             };
+
             offlineProofHttp.get = function (url, config) {
                 config = angular.extend({ url: url, method: 'GET' }, config);
                 return offlineProofHttp(config);
             };
+
             offlineProofHttp.head = function (url, config) {
                 config = angular.extend({ url: url, method: 'HEAD' }, config);
                 return offlineProofHttp(config);
             };
+
             offlineProofHttp.jsonp = function (url, config) {
                 config = angular.extend({ url: url, method: 'JSONP' }, config);
                 return offlineProofHttp(config);
             };
+
             offlineProofHttp.post = function (url, data, config) {
                 config = angular.extend({ url: url, method: 'POST', data: data }, config);
                 return offlineProofHttp(config);
             };
+
             offlineProofHttp.put = function (url, data, config) {
                 config = angular.extend({ url: url, method: 'PUT', data: data }, config);
                 return offlineProofHttp(config);
@@ -147,4 +154,44 @@ angular.module('bicubic.httpService', [])
                 }
             }
         }
-    ]);
+    ])
+    .factory('formDataRequestTransform', [
+        function () {
+
+            function flatten(formData, data, prefix) {
+                var value,
+                    key;
+                for (var prop in data) {
+
+                    var propName = prop;
+
+                    //Hack for 2houses => removes index in arrays
+                    if (_.contains(prefix, '_ids')) {
+                        if (!isNaN(prop)) {propName = ''}
+                    }
+
+                    key = typeof prefix === "undefined" ? prop : prefix + '[' + propName + ']';
+                    value = data[prop];
+                    if (typeof value === "object") {
+                        flatten(formData, value, key);
+                    }
+                    else {
+                        formData.append(key, value);
+                    }
+                }
+            }
+
+            return function (data, headersGetter) {
+                var fd = new FormData();
+                flatten(fd, data);
+
+                if (headersGetter) {
+                    var headers = headersGetter();
+                    delete headers['Content-Type'];
+                }
+                return fd;
+            };
+        }
+    ])
+
+;

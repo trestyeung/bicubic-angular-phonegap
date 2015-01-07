@@ -4,7 +4,7 @@ angular.module('bicubic.loadedContent', [])
             restrict: 'EA',
             replace: false,
             scope: {
-                loadedContent : '='
+                loadedContent: '='
             },
             link: function ($scope, $element) {
 
@@ -13,8 +13,8 @@ angular.module('bicubic.loadedContent', [])
 
                 $spinnerContainer.append($spinner);
 
-                var hideLoader = $scope.$watch('loadedContent', function (n) {
-                    if (n !== undefined) {
+                var hideLoader = $scope.$watch('loadedContent', function (n, o) {
+                    if (n !== undefined && n !== o) {
                         if (n === true) {
                             if ($element.hasClass('hidden-opacity-quick')) {
                                 $element.removeClass('hidden-opacity-quick').addClass('show-opacity-quick');

@@ -68,6 +68,9 @@
     transform: translate3d(0, 0, 0);
     -webkit-perspective: 0;
     -webkit-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .before-animation {

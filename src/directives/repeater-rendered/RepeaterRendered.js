@@ -1,14 +1,15 @@
 (function (angular) {
     'use strict';
     angular.module('repeater-rendered', [])
-        .directive('onFinishRenderFilters', function ($timeout) {
+        .directive('onRepeaterRendered', function () {
             return {
                 restrict: 'A',
-                link: function (scope, element, attr) {
+                link: function (scope) {
+
                     if (scope.$last === true) {
-                        $timeout(function () {
+                        //scope.$evalAsync(function () {
                             scope.$emit('ngRepeatFinished');
-                        });
+                        //});
                     }
                 }
             }
